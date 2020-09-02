@@ -1672,23 +1672,27 @@ cdef class DB(object):
 
     def __dealloc__(self):
         self.close()
-        
-    def close(self):
+
+    def close(self, safe=True):
         cdef ColumnFamilyOptions copts
-        if not self.db == NULL:
+        cdef cpp_bool c_safe = safe
+        if hasattr(self, "db"):
+            # We need stop backround compactions
+            with nogil:
+                db.CancelAllBackgroundWork(self.db, c_safe)
             # We have to make sure we delete the handles so rocksdb doesn't
             # assert when we delete the db
-            self.cf_handles.clear()
+            del self.cf_handles[:]
             for copts in self.cf_options:
                 if copts:
                     copts.in_use = False
-            self.cf_options.clear()
+            del self.cf_options[:]
 
             with nogil:
                 del self.db
 
-        if self.opts is not None:
-            self.opts.in_use = False
+            if self.opts is not None:
+                self.opts.in_use = False
 
     @property
     def column_families(self):
