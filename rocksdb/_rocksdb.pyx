@@ -1696,7 +1696,7 @@ cdef class DB(object):
 
             if self.opts is not None:
                 self.opts.in_use = False
-        print(f"debug123 close called={self.db}")
+        print(f"debug123 close  called={self.db}")
 
     @property
     def column_families(self):
