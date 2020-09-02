@@ -1682,11 +1682,11 @@ cdef class DB(object):
             #     db.CancelAllBackgroundWork(self.db, c_safe)
             # We have to make sure we delete the handles so rocksdb doesn't
             # assert when we delete the db
-            del self.cf_handles[:]
+            self.cf_handles.clear()
             for copts in self.cf_options:
                 if copts:
                     copts.in_use = False
-            del self.cf_options[:]
+            self.cf_options.clear()
 
             with nogil:
                 del self.db
