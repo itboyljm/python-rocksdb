@@ -1678,8 +1678,8 @@ cdef class DB(object):
         cdef cpp_bool c_safe = safe
         if hasattr(self, "db"):
             # We need stop backround compactions
-            with nogil:
-                db.CancelAllBackgroundWork(self.db, c_safe)
+            # with nogil:
+            #     db.CancelAllBackgroundWork(self.db, c_safe)
             # We have to make sure we delete the handles so rocksdb doesn't
             # assert when we delete the db
             del self.cf_handles[:]
