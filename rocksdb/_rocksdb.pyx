@@ -1578,6 +1578,7 @@ cdef class DB(object):
         self.opts = None
         self.cf_handles = []
         self.cf_options = []
+        self.db_name = db_name
 
         if opts.in_use:
             raise Exception("Options object is already used by another DB")
@@ -1671,12 +1672,12 @@ cdef class DB(object):
         self.opts.in_use = True
 
     def __dealloc__(self):
-        print(f"debug123 dealloc calling={self.db}")
+        print(f"debug123 dealloc calling={self.db_name}")
         self.close()
-        print(f"debug123 dealloc called={self.db}")
+        print(f"debug123 dealloc called={self.db_name}")
 
     def close(self, safe=True):
-        print(f"debug123 close calling={self.db}")
+        print(f"debug123 close calling={self.db_name}")
         cdef ColumnFamilyOptions copts
         cdef cpp_bool c_safe = safe
         if hasattr(self, "db"):
@@ -1696,7 +1697,7 @@ cdef class DB(object):
 
             if self.opts is not None:
                 self.opts.in_use = False
-        print(f"debug123 close  called={self.db}")
+        print(f"debug123 close  called={self.db_name}")
 
     @property
     def column_families(self):
