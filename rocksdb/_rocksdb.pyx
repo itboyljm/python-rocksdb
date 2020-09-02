@@ -1671,9 +1671,12 @@ cdef class DB(object):
         self.opts.in_use = True
 
     def __dealloc__(self):
+        print(f"debug123 dealloc calling={self.db}")
         self.close()
+        print(f"debug123 dealloc called={self.db}")
 
     def close(self, safe=True):
+        print(f"debug123 close calling={self.db}")
         cdef ColumnFamilyOptions copts
         cdef cpp_bool c_safe = safe
         if hasattr(self, "db"):
@@ -1693,6 +1696,7 @@ cdef class DB(object):
 
             if self.opts is not None:
                 self.opts.in_use = False
+        print(f"debug123 close called={self.db}")
 
     @property
     def column_families(self):
